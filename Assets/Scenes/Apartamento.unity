@@ -304,9 +304,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438753}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 74707705}
@@ -410,9 +410,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438737}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 77544701}
@@ -644,15 +644,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   radialMenuPrefab: {fileID: 4314167723091951028, guid: 9a846e64b34a0184195b8247eee40987, type: 3}
-  menuCollider: {fileID: 1487192472}
-  openColliderScale: {x: 95, y: 10, z: 95}
+  allowRestoreOriginal: 1
   materials:
   - {fileID: 2100000, guid: 96dae2f09f54868408f904428548d00f, type: 2}
+  - {fileID: 2100000, guid: 037c10e8a9c9c5e47a726216732d17d8, type: 2}
+  - {fileID: 2100000, guid: ef7ea779c4b06c44dbe1512ffb506838, type: 2}
+  - {fileID: 2100000, guid: ca21afdde49d342408e91ab722a0415c, type: 2}
+  - {fileID: 2100000, guid: a6fa5bd2d2af7664685ca22809135b94, type: 2}
+  - {fileID: 2100000, guid: ebd6a75b223a0964489f78e97159aa88, type: 2}
   - {fileID: 2100000, guid: b7efee39c51e1c94f9e535a8e6edb43b, type: 2}
+  - {fileID: 2100000, guid: f1a8571c3ef3f4d46bbdfb8b2ecdec74, type: 2}
+  - {fileID: 2100000, guid: baf8ceb37ffecbd42a924d001e01127c, type: 2}
+  - {fileID: 2100000, guid: 5117b973a70f9744f946b055b48d006f, type: 2}
+  - {fileID: 2100000, guid: ab68e0201be44534493089b3dd1e4050, type: 2}
+  - {fileID: 2100000, guid: 6077e4f498f74ac48ad21c2bead7fd35, type: 2}
   - {fileID: 2100000, guid: b2aa31d8fe3745747a4b0fd95bfaf2c4, type: 2}
+  - {fileID: 2100000, guid: d3b1829a6d5883c40bc3bbce8b2ba6ed, type: 2}
+  - {fileID: 2100000, guid: 48957feba398b3146bb5b1493df5403e, type: 2}
+  - {fileID: 2100000, guid: 3302d8980be2b5742b574a2509d9e6b7, type: 2}
+  - {fileID: 2100000, guid: 1e23b2d236a58f040968acd05c361bce, type: 2}
+  - {fileID: 2100000, guid: 59cf63250acfc334288c35253c616d40, type: 2}
   - {fileID: 2100000, guid: ce2bc60dd9a7e964daaaff36d79fbfdf, type: 2}
+  - {fileID: 2100000, guid: 8f3025aad64a437429f723e6fc4f95da, type: 2}
+  - {fileID: 2100000, guid: ad85a24c76e86cc45bd1040a4d583d90, type: 2}
+  - {fileID: 2100000, guid: b2394c0eb4527fe489f9cf53d290baeb, type: 2}
+  - {fileID: 2100000, guid: 19384859089e5ee4f99e102652ee3484, type: 2}
+  - {fileID: 2100000, guid: 40d59d21d94966945a48585c0be381b3, type: 2}
   - {fileID: 2100000, guid: d40e29484caa88c4891e1e09bf80ad8c, type: 2}
+  - {fileID: 2100000, guid: eff8590084661c94cb5fc27484f7630f, type: 2}
+  - {fileID: 2100000, guid: ffca86f74f18233469ebfedb1b9fc434, type: 2}
+  - {fileID: 2100000, guid: fb1e5269d9736634e8a69a31ce68d33a, type: 2}
+  - {fileID: 2100000, guid: 29f48cc2a8ed8f448a8579bc2c980c38, type: 2}
+  - {fileID: 2100000, guid: b64f712a7e888764cbee13b7c9f68cf3, type: 2}
   - {fileID: 2100000, guid: 92f575e356de5d64e9346ceddb75dee5, type: 2}
+  - {fileID: 2100000, guid: eee383f5d326d114ba8c84092c6642f8, type: 2}
+  - {fileID: 2100000, guid: 101773f6372afc54b82c2867326d2bbe, type: 2}
+  - {fileID: 2100000, guid: ffc42774be58d5a4dbaee5ba99bec642, type: 2}
+  - {fileID: 2100000, guid: 2e396b6df87a3c94e8e20e922295ec69, type: 2}
+  - {fileID: 2100000, guid: 89665d51fb7112a4fb72e949a593635f, type: 2}
 --- !u!114 &93607518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -889,9 +918,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438742}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 127447744}
@@ -1381,9 +1410,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438751}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 233016668}
@@ -1812,9 +1841,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438821}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 342993149}
@@ -2133,9 +2162,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438752}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 362372193}
@@ -2261,9 +2290,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438728}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 372118479}
@@ -2389,9 +2418,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438738}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 395587537}
@@ -2561,9 +2590,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438732}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 425021296}
@@ -3114,9 +3143,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438727}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 582220096}
@@ -3352,9 +3381,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438739}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 733639331}
@@ -6059,9 +6088,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438729}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 789397271}
@@ -6253,9 +6282,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438741}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 826601961}
@@ -6624,9 +6653,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438734}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 986004389}
@@ -6752,9 +6781,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438750}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 1012161963}
@@ -6990,9 +7019,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438730}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 1111814213}
@@ -7535,9 +7564,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438740}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 1279351873}
@@ -8196,9 +8225,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438735}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 1505539550}
@@ -8548,9 +8577,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438733}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 1600530141}
@@ -9139,9 +9168,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438736}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 1788983219}
@@ -10226,9 +10255,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438731}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 2139325235}
@@ -10332,9 +10361,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 751438743}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f6bf3d943ac7945842268c9ef1dca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5af0dcb2eb514d4ca343be38e2d7f18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea
+  m_EditorClassIdentifier: Assembly-CSharp::WorldUpTeleportationArea
   m_InteractionManager: {fileID: 0}
   m_Colliders:
   - {fileID: 2144337805}
@@ -10538,6 +10567,68 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a846e64b34a0184195b8247eee40987, type: 3}
+--- !u!1 &620100001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 620100002}
+  - component: {fileID: 620100003}
+  - component: {fileID: 620100004}
+  m_Layer: 0
+  m_Name: Interacciones del recorrido
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &620100002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620100001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &620100003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620100001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a177f6cbb9a4f34a26243db1f6bb139, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WelcomeMenu
+  dayNightControls: {fileID: 1238453187}
+  tourStart: {x: 3.5, y: 0, z: -3.5}
+--- !u!114 &620100004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620100001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55081ae30fa6489bac0758dad769b36b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HouseInteractions
+  house: {fileID: 0}
+  terrain: {fileID: 0}
+  wallMaterials: {fileID: 93607517}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -10558,3 +10649,4 @@ SceneRoots:
   - {fileID: 220042319}
   - {fileID: 3002036692248461863}
   - {fileID: 93607516}
+  - {fileID: 620100002}

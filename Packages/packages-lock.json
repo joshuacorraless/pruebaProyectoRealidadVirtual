@@ -1,16 +1,5 @@
 {
   "dependencies": {
-    "com.ivanmurzak.unity.mcp": {
-      "version": "0.93.2",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.test-framework": "1.1.33",
-        "com.unity.modules.uielements": "1.0.0",
-        "extensions.unity.playerprefsex": "2.1.5"
-      },
-      "url": "https://package.openupm.com"
-    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
@@ -342,13 +331,6 @@
       },
       "url": "https://packages.unity.com"
     },
-    "extensions.unity.playerprefsex": {
-      "version": "2.1.5",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://package.openupm.com"
-    },
     "com.unity.modules.androidjni": {
       "version": "1.0.0",
       "depth": 1,
@@ -423,9 +405,18 @@
     },
     "com.unity.modules.terrain": {
       "version": "1.0.0",
-      "depth": 2,
+      "depth": 1,
       "source": "builtin",
       "dependencies": {}
+    },
+    "com.unity.modules.terrainphysics": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.terrain": "1.0.0"
+      }
     },
     "com.unity.modules.ui": {
       "version": "1.0.0",
