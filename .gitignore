@@ -105,7 +105,7 @@ InitTestScene*.unity*
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
 
-# Configuración local y archivos generados
+# Unity MCP (com.ivanmurzak.unity.mcp) para Claude Code
 /.claude/
 /[Aa]ssets/Plugins/NuGet/
 /[Aa]ssets/Plugins/NuGet.meta

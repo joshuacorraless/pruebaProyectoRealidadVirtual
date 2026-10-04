@@ -10,23 +10,34 @@ public class ButtonInputDetector : MonoBehaviour
     public InputAction primaryButtonAction = new InputAction(
         "PrimaryButton", InputActionType.Button, "<XRController>{RightHand}/primaryButton");
 
+    // stick del control derecho: con el menu abierto adelanta o atrasa la hora
+    InputAction timeStickAction = new InputAction(
+        "TimeStick", InputActionType.Value, "<XRController>{RightHand}/primary2DAxis");
+
     // posicion del control
     public Transform rightControllerTransform;
 
-    // cabeza del jugador, para que el boton la mire
+    // cabeza del jugador, para que el boton aparezca enfrente
     public Transform head;
 
     // canvas del boton
     public GameObject toggleButton;
 
+    // que tan enfrente del jugador aparece el boton (metros)
     public float spawnDistance = 0.75f;
 
-    readonly InputAction timeStick = new InputAction(
-        "TimeDial", InputActionType.Value, "<XRController>{RightHand}/primary2DAxis");
-    readonly List<Behaviour> pausedLocomotion = new List<Behaviour>();
+    // horas que avanza por segundo con el stick a fondo
+    public float hoursPerSecond = 4f;
+
     DayNightCycle cycle;
 
-    public bool IsOpen => toggleButton != null && toggleButton.activeSelf;
+    // lo que se apaga mientras el menu esta abierto, para que el stick no mueva al jugador
+    readonly List<Behaviour> pausedLocomotion = new List<Behaviour>();
+
+    public bool IsOpen
+    {
+        get { return toggleButton != null && toggleButton.activeSelf; }
+    }
 
     void Start()
     {
@@ -42,13 +53,13 @@ public class ButtonInputDetector : MonoBehaviour
     void OnEnable()
     {
         primaryButtonAction.Enable();
-        timeStick.Enable();
+        timeStickAction.Enable();
     }
 
     void OnDisable()
     {
         primaryButtonAction.Disable();
-        timeStick.Disable();
+        timeStickAction.Disable();
         CloseMenu();
     }
 
@@ -60,32 +71,44 @@ public class ButtonInputDetector : MonoBehaviour
         }
 
         if (!IsOpen || cycle == null) return;
-        float horizontal = timeStick.ReadValue<Vector2>().x;
+
+        // stick a la derecha adelanta la hora, a la izquierda la atrasa
+        float horizontal = timeStickAction.ReadValue<Vector2>().x;
         if (Mathf.Abs(horizontal) > 0.25f)
-            cycle.AdjustHours(horizontal * 4f * Time.deltaTime);
+            cycle.AdjustHours(horizontal * hoursPerSecond * Time.deltaTime);
     }
 
     public void ToggleMenu()
     {
         if (toggleButton == null) return;
+
         if (IsOpen)
         {
             CloseMenu();
             return;
         }
 
-        MaterialChanger.CloseActiveMenu();
-
         Transform origin = head != null ? head : rightControllerTransform;
         if (origin == null) return;
-        FindFirstObjectByType<WelcomeMenu>()?.CloseMenu();
+
+        // cierra los otros menus que esten abiertos
+        MaterialChanger.CloseActiveMenu();
+
+        WelcomeMenu welcomeMenu = FindFirstObjectByType<WelcomeMenu>();
+        if (welcomeMenu != null)
+            welcomeMenu.CloseMenu();
+
+        // enfrente del jugador y derecho, aunque este mirando hacia arriba o hacia abajo
         Vector3 forward = Vector3.ProjectOnPlane(origin.forward, Vector3.up).normalized;
-        if (forward.sqrMagnitude < 0.01f) forward = Vector3.forward;
-        Vector3 position = origin.position + forward * Mathf.Max(0.75f, spawnDistance);
-        toggleButton.transform.SetPositionAndRotation(position, Quaternion.LookRotation(forward, Vector3.up));
+        if (forward.sqrMagnitude < 0.01f)
+            forward = Vector3.forward;
+
+        // el frente de un canvas mira hacia -Z, asi que su forward apunta lejos de la cabeza
+        toggleButton.transform.position = origin.position + forward * spawnDistance;
+        toggleButton.transform.rotation = Quaternion.LookRotation(forward, Vector3.up);
         toggleButton.SetActive(true);
 
-        // El stick controla el dial mientras está abierto, sin mover ni teletransportar al jugador.
+        // el stick cambia la hora, asi que no debe mover ni teletransportar al jugador
         foreach (ControllerInputActionManager manager in FindObjectsByType<ControllerInputActionManager>(FindObjectsSortMode.None))
             PauseLocomotion(manager);
         foreach (LocomotionProvider provider in FindObjectsByType<LocomotionProvider>(FindObjectsSortMode.None))
@@ -95,6 +118,7 @@ public class ButtonInputDetector : MonoBehaviour
     void PauseLocomotion(Behaviour component)
     {
         if (!component.enabled) return;
+
         pausedLocomotion.Add(component);
         component.enabled = false;
     }
@@ -103,6 +127,7 @@ public class ButtonInputDetector : MonoBehaviour
     {
         if (toggleButton != null)
             toggleButton.SetActive(false);
+
         foreach (Behaviour component in pausedLocomotion)
         {
             if (component != null)
@@ -114,6 +139,6 @@ public class ButtonInputDetector : MonoBehaviour
     void OnDestroy()
     {
         primaryButtonAction.Dispose();
-        timeStick.Dispose();
+        timeStickAction.Dispose();
     }
 }

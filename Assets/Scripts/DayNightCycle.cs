@@ -5,6 +5,8 @@ public class DayNightCycle : MonoBehaviour
     public Light sun;
     public Material skyboxMaterial;
     public float cycleDuration = 30f;
+
+    // apagado: la hora solo cambia desde el menu
     public bool automaticCycle;
 
     // day color config
@@ -17,42 +19,63 @@ public class DayNightCycle : MonoBehaviour
     public Color nightHorizon = new Color(0.01f, 0.01f, 0.05f);
     public float nightIntensity = 0.05f;
 
-    float cycle01 = 0.25f;
-    Material runtimeSkybox;
-    Material originalSkybox;
-    Color originalAmbientSky, originalAmbientEquator, originalAmbientGround;
-    float originalReflectionIntensity;
+    // night ambient config (de dia se usa la luz ambiente que trae la escena)
+    public Color nightAmbientEquator = new Color(0.055f, 0.065f, 0.1f);
+    public Color nightAmbientGround = new Color(0.025f, 0.03f, 0.05f);
+    public float nightReflectionIntensity = 0.15f;
 
-    public float Hour => Mathf.Repeat(cycle01 * 24f + 6f, 24f);
+    // 0 a 1 a lo largo de todo el ciclo. empieza en mediodia
+    private float cycle01 = 0.25f;
+
+    // copia del skybox, para no modificar el material del proyecto
+    private Material runtimeSkybox;
+
+    // como estaba la escena al empezar, para dejarla igual al salir
+    private Material originalSkybox;
+    private Color originalAmbientSky;
+    private Color originalAmbientEquator;
+    private Color originalAmbientGround;
+    private float originalReflectionIntensity;
 
     // true mientras el sol esta sobre el horizonte
     public bool IsDay { get; private set; }
+
+    // hora del dia de 0 a 24. el ciclo empieza a las 6, cuando sale el sol
+    public float Hour
+    {
+        get { return Mathf.Repeat(cycle01 * 24f + 6f, 24f); }
+    }
 
     void Awake()
     {
         if (sun == null)
             sun = GetComponent<Light>();
+
         originalSkybox = RenderSettings.skybox;
         originalAmbientSky = RenderSettings.ambientSkyColor;
         originalAmbientEquator = RenderSettings.ambientEquatorColor;
         originalAmbientGround = RenderSettings.ambientGroundColor;
         originalReflectionIntensity = RenderSettings.reflectionIntensity;
+
         Material source = skyboxMaterial != null ? skyboxMaterial : originalSkybox;
         if (source != null)
         {
             runtimeSkybox = new Material(source);
             RenderSettings.skybox = runtimeSkybox;
         }
+
         ApplyCycle();
     }
 
     void Update()
     {
         if (!automaticCycle) return;
-        cycle01 = Mathf.Repeat(cycle01 + Time.deltaTime / Mathf.Max(1f, cycleDuration), 1f);
+
+        cycle01 = Mathf.Repeat(cycle01 + Time.deltaTime / cycleDuration, 1f);
         ApplyCycle();
     }
 
+    // adelanta la hora del dia, o la atrasa si hours es negativo
     public void AdjustHours(float hours)
     {
         cycle01 = Mathf.Repeat(cycle01 + hours / 24f, 1f);
@@ -99,17 +122,18 @@ public class DayNightCycle : MonoBehaviour
         if (sun != null)
             sun.intensity = Mathf.Lerp(dayIntensity, nightIntensity, t);
 
+        // de noche tambien baja la luz ambiente, si no la casa queda iluminada por dentro
         RenderSettings.ambientSkyColor = Color.Lerp(originalAmbientSky, nightZenith, t);
-        RenderSettings.ambientEquatorColor = Color.Lerp(originalAmbientEquator, new Color(0.055f, 0.065f, 0.1f), t);
-        RenderSettings.ambientGroundColor = Color.Lerp(originalAmbientGround, new Color(0.025f, 0.03f, 0.05f), t);
-        RenderSettings.reflectionIntensity = Mathf.Lerp(originalReflectionIntensity, 0.15f, t);
+        RenderSettings.ambientEquatorColor = Color.Lerp(originalAmbientEquator, nightAmbientEquator, t);
+        RenderSettings.ambientGroundColor = Color.Lerp(originalAmbientGround, nightAmbientGround, t);
+        RenderSettings.reflectionIntensity = Mathf.Lerp(originalReflectionIntensity, nightReflectionIntensity, t);
 
         if (runtimeSkybox != null)
         {
             runtimeSkybox.SetColor("_ZenithColor", Color.Lerp(dayZenith, nightZenith, t));
             runtimeSkybox.SetColor("_HorizonColor", Color.Lerp(dayHorizon, nightHorizon, t));
             runtimeSkybox.SetFloat("_AtmosphereThickness", Mathf.Lerp(0.5f, 1f, t));
-            runtimeSkybox.SetFloat("_EnableStars", t);
+            runtimeSkybox.SetFloat("_EnableStars", Mathf.Lerp(0f, 1f, t));
         }
     }
 
@@ -117,10 +141,12 @@ public class DayNightCycle : MonoBehaviour
     {
         if (RenderSettings.skybox == runtimeSkybox)
             RenderSettings.skybox = originalSkybox;
+
         RenderSettings.ambientSkyColor = originalAmbientSky;
         RenderSettings.ambientEquatorColor = originalAmbientEquator;
         RenderSettings.ambientGroundColor = originalAmbientGround;
         RenderSettings.reflectionIntensity = originalReflectionIntensity;
+
         if (runtimeSkybox != null)
             Destroy(runtimeSkybox);
     }

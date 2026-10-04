@@ -7495,7 +7495,7 @@ MonoBehaviour:
   rightControllerTransform: {fileID: 2138263181}
   head: {fileID: 941847807}
   toggleButton: {fileID: 220042315}
-  spawnDistance: 0.25
+  spawnDistance: 0.75
 --- !u!4 &1238453188
 Transform:
   m_ObjectHideFlags: 0
