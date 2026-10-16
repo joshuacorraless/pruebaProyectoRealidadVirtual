@@ -56,8 +56,9 @@ public class DayNightToggleButton : MonoBehaviour
     {
         if (dayNightCycle == null) return;
 
+        // el icono muestra la hora actual: sol de dia, luna de noche
         if (icon != null)
-            icon.sprite = dayNightCycle.IsDay ? toNightSprite : toDaySprite;
+            icon.sprite = dayNightCycle.IsDay ? toDaySprite : toNightSprite;
 
         // las 12 quedan arriba y da una vuelta en 24 horas (15 grados por hora)
         if (dialPointer != null)

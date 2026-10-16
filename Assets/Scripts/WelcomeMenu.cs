@@ -239,10 +239,10 @@ public class WelcomeMenu : MonoBehaviour
         {
             content = new string[]
             {
-                "En Play, haga clic en Game\nMantenga clic derecho para mirar\nCamine con Shift + I, J, K o L\nSi falta el mando derecho, presione ]",
+                "En Play, haga clic en Game\nClic derecho para mirar; J y L giran\nCamine con Shift + I, J, K o L\nSi falta el mando derecho, presione ]",
                 "Apunte a la puerta o mueble desde lejos\nMantenga G y mueva el mouse\nSin clic derecho; I aleja y K acerca\nJ y L giran; suelte G para dejarlo",
                 "Apunte a la brocha y presione T\nPara un mueble, suelte G y presione T\nSuelte T antes de escoger el acabado",
-                "Apunte a la muestra y presione T\nPase de página con J y L\nLa muestra del centro es el acabado original\nHay 36 acabados de pared y 4 de muebles",
+                "Apunte a la muestra y presione T\nPase de página con J y L\nLa muestra del centro es el acabado original\n36 de pared, 4 de muebles y 6 de piso",
                 "Abra o cierre el menú con 1\nCambie la hora con J y L\nApunte al dial y presione T: día o noche\nUse los números de la fila superior",
                 "F1 o 2 abren o cierran esta ayuda\nMantenga I y apunte al piso\nCuando el arco esté azul, suelte I\nCierre los menús antes de moverse"
             };
