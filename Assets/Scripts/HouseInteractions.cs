@@ -47,10 +47,6 @@ public class HouseInteractions : MonoBehaviour
         {
             if (renderer.name == "Losa baja")
                 floor = renderer;
-
-            // pared que pinta la brocha, si no se asigno a mano
-            if (renderer.name == "Fachada baja.005" && wallMaterials != null && wallMaterials.targetRenderer == null)
-                wallMaterials.targetRenderer = renderer;
         }
 
         if (floor == null) return;
