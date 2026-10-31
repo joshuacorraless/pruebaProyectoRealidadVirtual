@@ -28,6 +28,13 @@ public class MaterialChanger : MonoBehaviour
     // que tan lejos del jugador aparece el menu (metros)
     public float menuDistance = 1.5f;
 
+    // brochas de piso: el menu sale acostado en el piso donde esta la brocha, y la brocha se esconde mientras.
+    // apagado (como antes) el menu sale enfrente del jugador
+    public bool menuOnFloor;
+
+    // brochas de pared: igual, pero el menu sale pegado a la pared (la brocha tiene que mirar hacia la pared)
+    public bool menuOnWall;
+
     // el que tiene el menu abierto. solo puede haber uno a la vez
     static MaterialChanger activeChanger;
 
@@ -50,6 +57,9 @@ public class MaterialChanger : MonoBehaviour
 
     // material que tenia cada renderer antes del primer cambio
     readonly Dictionary<Renderer, Material> originalMaterials = new Dictionary<Renderer, Material>();
+
+    // dibujos de la brocha escondidos mientras el menu esta en el piso
+    readonly List<Renderer> hiddenRenderers = new List<Renderer>();
 
     void Awake()
     {
@@ -208,6 +218,38 @@ public class MaterialChanger : MonoBehaviour
             rotation = Quaternion.LookRotation(forward, Vector3.up);
         }
 
+        if (menuOnFloor || menuOnWall)
+        {
+            if (menuOnFloor)
+            {
+                Vector3 toPlayer = Camera.main != null ? Camera.main.transform.position - transform.position : Vector3.back;
+                toPlayer = Vector3.ProjectOnPlane(toPlayer, Vector3.up);
+                if (toPlayer.sqrMagnitude < 0.01f)
+                    toPlayer = Vector3.back;
+
+                // mirando hacia arriba, con la parte de arriba del menu del lado contrario al jugador
+                position = transform.position + Vector3.up * 0.05f;
+                rotation = Quaternion.LookRotation(Vector3.down, -toPlayer.normalized);
+            }
+            else
+            {
+                // un poco afuera de la pared, mirando hacia ella como la brocha
+                position = transform.position - transform.forward * 0.03f;
+                rotation = Quaternion.LookRotation(transform.forward, Vector3.up);
+            }
+
+            // de lejos no crece mas que el menu normal, para que no se meta en el piso ni en las paredes de al lado
+            distance = Camera.main != null ? Mathf.Min(Vector3.Distance(Camera.main.transform.position, position), menuDistance) : menuDistance;
+
+            foreach (Renderer part in GetComponentsInChildren<Renderer>())
+            {
+                if (!part.enabled) continue;
+
+                part.enabled = false;
+                hiddenRenderers.Add(part);
+            }
+        }
+
         currentMenu = Instantiate(radialMenuPrefab, position, rotation);
 
         // mas cerca se hace mas chico, para que se vea igual de grande
@@ -300,6 +342,13 @@ public class MaterialChanger : MonoBehaviour
             currentMenu = null;
             closedFrame = Time.frameCount;
         }
+
+        foreach (Renderer part in hiddenRenderers)
+        {
+            if (part != null)
+                part.enabled = true;
+        }
+        hiddenRenderers.Clear();
 
         if (stickAction != null)
         {
