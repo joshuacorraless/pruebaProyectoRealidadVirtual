@@ -115,7 +115,7 @@ public class GuiaControles : MonoBehaviour
             "<b>Stick</b>: caminar, sin teletransporte",
             "<b>Gatillo</b>: escoger brochas,\nmuestras y botones",
             "<b>Grip</b>: agarrar puertas y muebles",
-            "<b>X</b> y <b>Y</b>: no se usan"
+            "<b>X</b>: cinta métrica, apunte y estire\n<b>Y</b>: cerrar la cinta métrica"
         });
         BuildController(guide, 205f, "Mando derecho", 1f, "B", "A", new string[]
         {
@@ -126,8 +126,11 @@ public class GuiaControles : MonoBehaviour
         });
 
         TextMeshProUGUI tip = MenuStyle.Label(guide,
-            "Puertas: agarre la <color=#FFCC4D>manilla amarilla</color> con Grip y jale\nBrochas: apúntelas y presione el gatillo",
-            new Vector2(0f, -395f), new Vector2(760f, 80f), 23f, TextAlignmentOptions.Center);
+            "Puertas: agarre la <color=#FFCC4D>manilla amarilla</color> con Grip y jale\n" +
+            "Brochas: solo en la casa de la <color=#FFCC4D>flecha amarilla</color>, con el gatillo\n" +
+            "Cinta métrica: mantenga X, apunte y suelte. <color=#FFCC4D>Y la cierra</color>\n" +
+            "En el simulador: Shift + 1 es X y Shift + 2 es Y",
+            new Vector2(0f, -385f), new Vector2(760f, 120f), 21f, TextAlignmentOptions.Center);
         tip.color = MenuStyle.Muted;
     }
 
