@@ -11,7 +11,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 // montanas de fondo. la casa 1 (la de los carros) funciona como la vieja con los mismos scripts: WallSides de
 // Felipe pinta sus paredes por dentro y por fuera, sus brochas, puertas con HingedDoor y muebles que se mueven.
 // las otras 3 casas solo se ven. Apartamento.unity no se toca. se puede correr otra vez y rehace la copia
-public static class ArmarPlanoNuevo
+public static partial class ArmarPlanoNuevo
 {
     const string escenaOriginal = "Assets/Scenes/Apartamento.unity";
     const string escenaNueva = "Assets/Scenes/Apartamento2.unity";
@@ -190,6 +190,9 @@ public static class ArmarPlanoNuevo
             if (raiz.name == "VR Player")
                 raiz.transform.SetPositionAndRotation(inicio, Quaternion.identity);
         }
+
+        // lo que se agrego despues de las pruebas con usuarios (ArmarPlanoNuevoRetoques.cs)
+        Retocar(casas.transform, casa1);
 
         EditorSceneManager.MarkSceneDirty(escena);
         EditorSceneManager.SaveScene(escena);

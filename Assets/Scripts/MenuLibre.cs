@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 // MaterialChanger pone el menu de acabados de los muebles enfrente del jugador y solo revisa que no haya nada
@@ -9,12 +10,26 @@ public class MenuLibre : MonoBehaviour
     // medio ancho del menu a la distancia normal de MaterialChanger (1.5 m)
     public float halfSize = 0.33f;
 
+    // de noche las muestras de los menus se veian oscuras: esta luz (solo de noche, con FarolNocturno) alumbra solo
+    // la capa de los menus (rendering layer 3) y sigue a la cabeza, asi alumbra lo que el jugador ve como de dia
+    public Light menuLight;
+
     RadialMenu checkedMenu;
+    List<Renderer> parts = new List<Renderer>();
 
     void LateUpdate()
     {
         RadialMenu menu = FindFirstObjectByType<RadialMenu>();
-        if (menu == null || menu == checkedMenu || Camera.main == null) return;
+        if (menu == null) return;
+
+        // cada frame: al pasar de pagina el menu crea botones nuevos
+        menu.GetComponentsInChildren(true, parts);
+        foreach (Renderer part in parts)
+            part.renderingLayerMask |= 1u << 3;
+        if (menuLight != null && Camera.main != null)
+            menuLight.transform.rotation = Camera.main.transform.rotation;
+
+        if (menu == checkedMenu || Camera.main == null) return;
         checkedMenu = menu;
 
         foreach (MaterialChanger brush in FindObjectsByType<MaterialChanger>(FindObjectsSortMode.None))
