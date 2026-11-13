@@ -52,6 +52,12 @@ public static class ArmarPlanoNuevo
 
         if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
 
+        Rehacer();
+    }
+
+    // lo mismo sin preguntar
+    static void Rehacer()
+    {
         GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(modelo);
         if (prefab == null)
         {
@@ -142,7 +148,10 @@ public static class ArmarPlanoNuevo
         foreach (Renderer pieza in casas.GetComponentsInChildren<Renderer>())
         {
             if (pieza.name.StartsWith("Escalera moldeada") && !pieza.name.Contains("_["))
+            {
                 NoTeletransportarDebajo(pieza);
+                Rampa(pieza);
+            }
         }
         Faroles(casas.transform);
         Physics.SyncTransforms();
@@ -1137,7 +1146,7 @@ public static class ArmarPlanoNuevo
     // ---------- brochas y luces (casa 1) ----------
 
     // como en el apartamento: una brocha en el piso de cada planta (con el menu en el suelo) y brochas de pared en
-    // la planta baja (una por cuarto). WallSides decide al empezar que lado pinta cada una segun de que lado esta
+    // las dos plantas (una por cuarto). WallSides decide al empezar que lado pinta cada una segun de que lado esta
     static int ArmarBrochas(Transform casa, List<Renderer> tramos, MaterialChanger brochaPiso, MaterialChanger brochaPared)
     {
         GameObject grupo = new GameObject("Brochas casa 1");
@@ -1166,11 +1175,45 @@ public static class ArmarPlanoNuevo
             hechas++;
         }
 
-        // paredes de la planta baja. Blender ya corto las paredes donde les llega otra, asi cada lado de cada pieza
-        // da a un solo espacio. los cuatro cuartos (lavanderia, bano y los dos cuartos) llevan una brocha cada uno; la
-        // sala, cocina y pasillo (el espacio mas grande) una por pared; y afuera una sola para la fachada, entre las
-        // ventanas del frente. cada brocha pinta su pared y PintarCuarto copia el acabado al resto de su grupo
-        List<Cuarto> cuartos = Cuartos(tramos, huecosDePuertas, casa);
+        // las paredes de las dos plantas. la fachada de las dos es una sola brocha, abajo entre las ventanas del frente
+        Cuarto fachada = null;
+        foreach (string planta in new string[] { "baja", "alta" })
+            hechas += BrochasDePlanta(planta, casa, tramos, brochaPared, grupo.transform, ref fachada);
+
+        if (fachada != null)
+        {
+            // afuera tambien va la orilla de las losas (slot 1: solo la orilla de afuera, la franja entre los pisos)
+            foreach (Renderer losa in casa.GetComponentsInChildren<Renderer>())
+            {
+                if (losa.name.StartsWith("Suelo piso porcelanato") && losa.sharedMaterials.Length == 3)
+                    fachada.Agregar(losa, 1, Vector3.zero);
+            }
+            hechas += PonerBrocha(fachada, "Brocha fachada ", tramos, brochaPared, grupo.transform, Frente(fachada, casa)) ? 1 : 0;
+        }
+
+        // las de modelo ya no hacen falta
+        Object.DestroyImmediate(brochaPiso.gameObject);
+        Object.DestroyImmediate(brochaPared.gameObject);
+        return hechas;
+    }
+
+    // paredes de una planta. Blender ya corto las paredes donde les llega otra, asi cada lado de cada pieza da a un
+    // solo espacio. los cuatro cuartos (lavanderia, bano y los dos cuartos) llevan una brocha cada uno; la sala,
+    // cocina y pasillo (el espacio mas grande) una por pared. lo de afuera se junta en "fachada", que lleva una sola
+    // brocha para las dos plantas. cada brocha pinta su pared y PintarCuarto copia el acabado al resto de su grupo
+    static int BrochasDePlanta(string planta, Transform casa, List<Renderer> tramos, MaterialChanger brochaPared, Transform grupo, ref Cuarto fachada)
+    {
+        int hechas = 0;
+        // las de arriba se llaman "Brocha sala alta 20" y asi
+        string deLaPlanta = planta == "baja" ? "" : planta + " ";
+        float piso = float.MaxValue;
+        foreach (Renderer tramo in tramos)
+        {
+            if (Planta(tramo.bounds) == planta)
+                piso = Mathf.Min(piso, tramo.bounds.min.y);
+        }
+
+        List<Cuarto> cuartos = Cuartos(planta, tramos, huecosDePuertas, casa);
         Cuarto comun = null;
         foreach (Cuarto cuarto in cuartos)
         {
@@ -1187,7 +1230,7 @@ public static class ArmarPlanoNuevo
         }
         // las vigas (lo que queda de pared arriba de las puertas, desde 2.6 m) no las ve el recorrido, que va a 1.3 m:
         // cada cara va con el espacio al que da
-        List<Renderer> vigas = tramos.FindAll(t => Planta(t.bounds) == "baja" && t.bounds.min.y > centroCasa.y + 2f);
+        List<Renderer> vigas = tramos.FindAll(t => Planta(t.bounds) == planta && t.bounds.min.y > piso + 2f);
         foreach (Renderer viga in vigas)
         {
             foreach (Vector3 hacia in new Vector3[] { Vector3.right, Vector3.left, Vector3.forward, Vector3.back })
@@ -1206,7 +1249,7 @@ public static class ArmarPlanoNuevo
         // con la sala, y antes que con afuera)
         foreach (Renderer canto in casa.GetComponentsInChildren<Renderer>())
         {
-            if (!canto.name.StartsWith("Canto") || Planta(canto.bounds) != "baja") continue;
+            if (!canto.name.StartsWith("Canto") || Planta(canto.bounds) != planta) continue;
             Mesh malla = canto.GetComponent<MeshFilter>().sharedMesh;
             Vector3 n = canto.transform.TransformDirection(malla.normals[malla.triangles[0]]).normalized;
             Cuarto suyo = DelCanto(canto.bounds.center, n, cuartos, comun);
@@ -1217,12 +1260,12 @@ public static class ArmarPlanoNuevo
         // el recorrido no lo ve porque la puerta esta tapada, y quedaba sin brocha
         foreach (Renderer tramo in tramos)
         {
-            if (Planta(tramo.bounds) != "baja") continue;
+            if (Planta(tramo.bounds) != planta) continue;
             foreach (Vector3 hacia in new Vector3[] { Vector3.right, Vector3.left, Vector3.forward, Vector3.back })
             {
                 int lado = SlotDe(tramo, hacia);
                 Vector3 enfrente = tramo.bounds.center + hacia * (Vector3.Dot(tramo.bounds.extents, Abs(hacia)) + 0.1f);
-                if (lado < 0 || cuartos.Exists(c => c.Tiene(tramo, lado)) || !huecosDePuertas.Exists(h => h.Contains(new Vector3(enfrente.x, h.center.y, enfrente.z)))) continue;
+                if (lado < 0 || cuartos.Exists(c => c.Tiene(tramo, lado)) || !huecosDePuertas.Exists(h => Planta(h) == planta && h.Contains(new Vector3(enfrente.x, h.center.y, enfrente.z)))) continue;
                 // desde un poco enfrente de la cara: a los lados del centro de la pieza solo esta la pared que le llega
                 Cuarto suyo = DelCanto(enfrente + hacia * 0.05f, hacia, cuartos, comun);
                 if (suyo != null)
@@ -1234,7 +1277,7 @@ public static class ArmarPlanoNuevo
         // dan al pasillo cerca de esa puerta salen de la sala y van con una sola brocha encima de la puerta del cuarto
         // sin escritorio
         Bounds puertaSinEscritorio;
-        Panel sobrePuerta = SobreLaPuerta(cuartos, comun, vigas, casa, out puertaSinEscritorio);
+        Panel sobrePuerta = SobreLaPuerta(planta, cuartos, comun, vigas, casa, out puertaSinEscritorio);
         if (sobrePuerta != null)
         {
             Cuarto union = new Cuarto();
@@ -1250,18 +1293,7 @@ public static class ArmarPlanoNuevo
                 comun.hacia.RemoveAt(k);
             }
             if (union.paredes.Count > 0)
-                hechas += PonerBrocha(union, "Brocha union ", tramos, brochaPared, grupo.transform, sobrePuerta) ? 1 : 0;
-        }
-
-        // afuera tambien va la orilla de las losas (slot 1: solo la orilla de afuera, la franja entre los pisos)
-        foreach (Cuarto cuarto in cuartos)
-        {
-            if (!cuarto.afuera) continue;
-            foreach (Renderer losa in casa.GetComponentsInChildren<Renderer>())
-            {
-                if (losa.name.StartsWith("Suelo piso porcelanato") && losa.sharedMaterials.Length == 3)
-                    cuarto.Agregar(losa, 1, Vector3.zero);
-            }
+                hechas += PonerBrocha(union, "Brocha union " + deLaPlanta, tramos, brochaPared, grupo, sobrePuerta) ? 1 : 0;
         }
 
         foreach (Cuarto cuarto in cuartos)
@@ -1269,17 +1301,22 @@ public static class ArmarPlanoNuevo
             if (cuarto == comun)
             {
                 foreach (Cuarto pared in PorPared(cuarto))
-                    hechas += PonerBrocha(pared, "Brocha sala ", tramos, brochaPared, grupo.transform, null) ? 1 : 0;
+                    hechas += PonerBrocha(pared, "Brocha sala " + deLaPlanta, tramos, brochaPared, grupo, null) ? 1 : 0;
             }
             else if (cuarto.afuera)
-                hechas += PonerBrocha(cuarto, "Brocha fachada ", tramos, brochaPared, grupo.transform, Frente(cuarto, casa)) ? 1 : 0;
+            {
+                // la brocha se pone despues, con lo de afuera de las dos plantas
+                if (fachada == null)
+                    fachada = cuarto;
+                else
+                {
+                    for (int k = 0; k < cuarto.paredes.Count; k++)
+                        fachada.Agregar(cuarto.paredes[k], cuarto.lados[k], cuarto.hacia[k]);
+                }
+            }
             else
-                hechas += PonerBrocha(cuarto, "Brocha cuarto ", tramos, brochaPared, grupo.transform, null) ? 1 : 0;
+                hechas += PonerBrocha(cuarto, "Brocha cuarto " + deLaPlanta, tramos, brochaPared, grupo, null) ? 1 : 0;
         }
-
-        // las de modelo ya no hacen falta
-        Object.DestroyImmediate(brochaPiso.gameObject);
-        Object.DestroyImmediate(brochaPared.gameObject);
         return hechas;
     }
 
@@ -1323,7 +1360,7 @@ public static class ArmarPlanoNuevo
         return new Vector2Int(Mathf.FloorToInt((punto.x - origenCuadros.x) / 0.25f), Mathf.FloorToInt((punto.z - origenCuadros.z) / 0.25f));
     }
 
-    // un cuarto de la planta baja: sus paredes, el slot del lado de cada una que da hacia el y hacia donde mira
+    // un cuarto de una planta: sus paredes, el slot del lado de cada una que da hacia el y hacia donde mira
     class Cuarto
     {
         public int cuadros;
@@ -1349,11 +1386,11 @@ public static class ArmarPlanoNuevo
         }
     }
 
-    // los cuartos de la planta baja: se recorre el piso en cuadros de 25 cm (a 1.3 m, a media ventana) sin cruzar
+    // los cuartos de una planta: se recorre el piso en cuadros de 25 cm (a 1.3 m, a media ventana) sin cruzar
     // paredes, puertas ni ventanas. el que llega a la orilla del recorrido es la fachada (afuera)
-    static List<Cuarto> Cuartos(List<Renderer> tramos, List<Bounds> puertas, Transform casa)
+    static List<Cuarto> Cuartos(string planta, List<Renderer> tramos, List<Bounds> puertas, Transform casa)
     {
-        List<Renderer> abajo = tramos.FindAll(t => Planta(t.bounds) == "baja");
+        List<Renderer> abajo = tramos.FindAll(t => Planta(t.bounds) == planta);
 
         // mientras se recorre, cada pared es una caja solida de su tamano: tapa sus puertas y ventanas, y las uniones
         // entre piezas no dejan rendijas por donde se cuele el recorrido de un cuarto a otro
@@ -1376,12 +1413,12 @@ public static class ArmarPlanoNuevo
             tapas.Add(tapa);
         }
         Physics.SyncTransforms();
-        Bounds planta = Caja(abajo.ToArray());
-        planta.Expand(new Vector3(3f, 0f, 3f));
-        origenCuadros = planta.min;
-        int nx = Mathf.CeilToInt(planta.size.x / 0.25f);
-        int nz = Mathf.CeilToInt(planta.size.z / 0.25f);
-        System.Func<int, int, Vector3> centro = (a, b) => new Vector3(planta.min.x + (a + 0.5f) * 0.25f, planta.min.y + 1.3f, planta.min.z + (b + 0.5f) * 0.25f);
+        Bounds zona = Caja(abajo.ToArray());
+        zona.Expand(new Vector3(3f, 0f, 3f));
+        origenCuadros = zona.min;
+        int nx = Mathf.CeilToInt(zona.size.x / 0.25f);
+        int nz = Mathf.CeilToInt(zona.size.z / 0.25f);
+        System.Func<int, int, Vector3> centro = (a, b) => new Vector3(zona.min.x + (a + 0.5f) * 0.25f, zona.min.y + 1.3f, zona.min.z + (b + 0.5f) * 0.25f);
         bool[,] visto = new bool[nx, nz];
         Dictionary<KeyValuePair<Renderer, int>, Dictionary<Cuarto, int>> cubos = new Dictionary<KeyValuePair<Renderer, int>, Dictionary<Cuarto, int>>();
         Vector2Int[] pasos = { Vector2Int.right, Vector2Int.left, Vector2Int.up, Vector2Int.down };
@@ -1560,15 +1597,16 @@ public static class ArmarPlanoNuevo
 
     // la viga encima de la puerta del cuarto sin escritorio (el que no tiene escritorio, lavadora ni inodoro), del
     // lado del pasillo: ahi va la brocha de la union de las tres puertas
-    static Panel SobreLaPuerta(List<Cuarto> cuartos, Cuarto comun, List<Renderer> vigas, Transform casa, out Bounds laPuerta)
+    static Panel SobreLaPuerta(string planta, List<Cuarto> cuartos, Cuarto comun, List<Renderer> vigas, Transform casa, out Bounds laPuerta)
     {
         laPuerta = new Bounds();
         Cuarto sinEscritorio = cuartos.Find(c => !c.afuera && c != comun && !System.Array.Exists(casa.GetComponentsInChildren<Renderer>(),
-            r => (r.name.StartsWith("Estaci") || r.name.StartsWith("Lavadora") || r.name.StartsWith("WC")) && c.celdas.Contains(Celda(r.bounds.center))));
+            r => (r.name.StartsWith("Estaci") || r.name.StartsWith("Lavadora") || r.name.StartsWith("WC")) && Planta(r.bounds) == planta && c.celdas.Contains(Celda(r.bounds.center))));
         if (sinEscritorio == null) return null;
 
         foreach (Bounds puerta in huecosDePuertas)
         {
+            if (Planta(puerta) != planta) continue;
             Vector3 normal = puerta.size.x < puerta.size.z ? Vector3.right : Vector3.forward;
             foreach (float lado in new float[] { 1f, -1f })
             {
@@ -1670,7 +1708,8 @@ public static class ArmarPlanoNuevo
             Renderer pared = afuera.paredes[k];
             Vector3 hacia = afuera.hacia[k];
             float cara, desde, hasta;
-            if (hacia == Vector3.zero || Vector3.Dot((carros - pared.bounds.center).normalized, hacia) < 0.5f || !CaraPrincipal(pared, hacia, out cara, out desde, out hasta)) continue;
+            // la brocha va abajo, aunque el grupo tenga tambien la fachada de arriba
+            if (hacia == Vector3.zero || Planta(pared.bounds) != "baja" || Vector3.Dot((carros - pared.bounds.center).normalized, hacia) < 0.5f || !CaraPrincipal(pared, hacia, out cara, out desde, out hasta)) continue;
             float lejos = Mathf.Abs(Vector3.Dot(carros, Abs(hacia)) - cara);
             if (frente == null || lejos < mejor - 0.05f)
             {
@@ -1900,6 +1939,116 @@ public static class ArmarPlanoNuevo
         caja.size = new Vector3(b.size.x / tabla.transform.lossyScale.x, 0.04f / tabla.transform.lossyScale.y, b.size.z / tabla.transform.lossyScale.z);
         tabla.transform.rotation = Quaternion.identity;
         GameObjectUtility.SetStaticEditorFlags(tabla, (StaticEditorFlags)~0);
+    }
+
+    // encima de las gradas una rampa invisible apoyada en las puntas de los escalones, para subir sin sentir cada
+    // escalon. las gradas se quedan con su collider (queda debajo de la rampa y tapa por abajo y por los lados).
+    // la escalera viene en dos piezas: la de concreto y la de "_[" con el acabado de cada huella
+    static void Rampa(Renderer escalera)
+    {
+        List<Renderer> piezas = new List<Renderer>();
+        foreach (Renderer pieza in escalera.transform.parent.GetComponentsInChildren<Renderer>())
+        {
+            if (pieza.name.StartsWith(escalera.name))
+                piezas.Add(pieza);
+        }
+
+        // sube por el lado largo, hacia donde estan las huellas mas altas
+        Bounds b = Caja(piezas.ToArray());
+        Vector3 sube = b.size.x > b.size.z ? Vector3.right : Vector3.forward;
+
+        // la punta de cada huella (de 15 cm o mas de fondo): el borde de abajo de la cara de arriba
+        List<Vector3> todos = new List<Vector3>();
+        Dictionary<int, Vector2> puntas = new Dictionary<int, Vector2>();
+        Dictionary<int, float> fondos = new Dictionary<int, float>();
+        foreach (Renderer pieza in piezas)
+        {
+            Mesh malla = pieza.GetComponent<MeshFilter>().sharedMesh;
+            Vector3[] vertices = malla.vertices;
+            int[] triangulos = malla.triangles;
+            for (int i = 0; i < vertices.Length; i++)
+                todos.Add(pieza.transform.TransformPoint(vertices[i]));
+            for (int i = 0; i < triangulos.Length; i += 3)
+            {
+                Vector3 a = pieza.transform.TransformPoint(vertices[triangulos[i]]);
+                Vector3 c = pieza.transform.TransformPoint(vertices[triangulos[i + 1]]);
+                Vector3 d = pieza.transform.TransformPoint(vertices[triangulos[i + 2]]);
+                if (Vector3.Cross(c - a, d - a).normalized.y < 0.95f) continue;
+
+                int clave = Mathf.RoundToInt(a.y * 100f);
+                float desde = Mathf.Min(Vector3.Dot(a, sube), Vector3.Dot(c, sube), Vector3.Dot(d, sube));
+                float hasta = Mathf.Max(Vector3.Dot(a, sube), Vector3.Dot(c, sube), Vector3.Dot(d, sube));
+                Vector2 punta;
+                if (!puntas.TryGetValue(clave, out punta))
+                {
+                    punta = new Vector2(desde, a.y);
+                    fondos[clave] = hasta;
+                }
+                punta.x = Mathf.Min(punta.x, desde);
+                puntas[clave] = punta;
+                fondos[clave] = Mathf.Max(fondos[clave], hasta);
+            }
+        }
+        List<Vector2> huellas = new List<Vector2>();
+        foreach (KeyValuePair<int, Vector2> punta in puntas)
+        {
+            if (fondos[punta.Key] - punta.Value.x >= 0.15f)
+                huellas.Add(punta.Value);
+        }
+        if (huellas.Count < 2) return;
+        huellas.Sort((x, y) => x.y.CompareTo(y.y));
+        Vector2 primera = huellas[0];
+        Vector2 ultima = huellas[huellas.Count - 1];
+        if (ultima.x < primera.x)
+        {
+            sube = -sube;
+            primera.x = -primera.x;
+            ultima.x = -ultima.x;
+        }
+        float pendiente = (ultima.y - primera.y) / (ultima.x - primera.x);
+
+        // la linea de las puntas, subida hasta que ningun punto de las gradas quede encima (y 1 cm mas)
+        float altura = float.MinValue;
+        foreach (Vector3 punto in todos)
+            altura = Mathf.Max(altura, punto.y - pendiente * Vector3.Dot(punto, sube));
+        altura += 0.01f;
+
+        // el piso de arriba: lo que hay justo despues del ultimo escalon
+        Vector3 lado = Vector3.Cross(Vector3.up, sube);
+        Vector3 centroLado = lado * Vector3.Dot(b.center, lado);
+        float final = Mathf.Max(Vector3.Dot(b.min, sube), Vector3.Dot(b.max, sube));
+        float pisoArriba = b.max.y;
+        float masAlto = float.MinValue;
+        foreach (RaycastHit hit in Physics.RaycastAll(centroLado + sube * (final + 0.05f) + Vector3.up * (b.max.y + 0.3f), Vector3.down, 1f))
+        {
+            if (hit.normal.y > 0.9f && !piezas.Contains(hit.collider.GetComponent<Renderer>()))
+                masAlto = Mathf.Max(masAlto, hit.point.y);
+        }
+        if (masAlto > float.MinValue)
+            pisoArriba = masAlto;
+
+        // desde donde la linea toca el suelo hasta donde llega al piso de arriba
+        float inicio = (b.min.y - altura) / pendiente;
+        float fin = (pisoArriba - altura) / pendiente;
+        Vector3 abajo = centroLado + sube * inicio + Vector3.up * b.min.y;
+        Vector3 arriba = centroLado + sube * fin + Vector3.up * (altura + pendiente * fin);
+
+        const float grosor = 0.1f;
+        Vector3 largo = arriba - abajo;
+        Vector3 normal = Vector3.Cross(largo.normalized, lado);
+        GameObject rampa = new GameObject("Rampa de " + escalera.name);
+        rampa.transform.SetParent(escalera.transform.parent, false);
+        rampa.transform.SetPositionAndRotation((abajo + arriba) / 2f - normal * grosor / 2f, Quaternion.LookRotation(largo, normal));
+        BoxCollider caja = rampa.AddComponent<BoxCollider>();
+        caja.size = new Vector3(Mathf.Abs(Vector3.Dot(b.size, lado)), grosor, largo.magnitude) / rampa.transform.lossyScale.x;
+        GameObjectUtility.SetStaticEditorFlags(rampa, (StaticEditorFlags)~0);
+
+        // el rayo del teletransporte pega primero en la rampa. tiene ~30 grados y el teletransporte acepta hasta
+        // 30, asi que aqui se deja hasta la pendiente que se puede caminar (slopeLimit del jugador)
+        WorldUpTeleportationArea area = rampa.AddComponent<WorldUpTeleportationArea>();
+        area.colliders.Add(caja);
+        area.interactionLayers = capaTeleport;
+        area.upNormalToleranceDegrees = 45f;
     }
 
     // los postes del lote prenden de noche (FarolNocturno sigue la hora de DayNightCycle)
