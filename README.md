@@ -2,7 +2,7 @@
 
 <h1>Proyecto Realidad Virtual</h1>
 
-<p><b>Recorrido inmersivo en VR de una casa de dos plantas para Meta Quest</b></p>
+<p><b>Recorrido en VR de un modelado de apartamentos de dos pisos</b></p>
 
 <p>
   <img src="https://img.shields.io/badge/Unity-6000.5.8f1-222222?style=for-the-badge&logo=unity&logoColor=white" alt="Unity 6">
@@ -11,8 +11,6 @@
   <img src="https://img.shields.io/badge/OpenXR-1.17-E4572E?style=for-the-badge" alt="OpenXR">
   <img src="https://img.shields.io/badge/URP-17.3-2E9E6B?style=for-the-badge" alt="URP">
 </p>
-
-<p><sub>TEC &nbsp;·&nbsp; Realidad Virtual &nbsp;·&nbsp; Semestre 6</sub></p>
 
 </div>
 
@@ -132,9 +130,3 @@ En el visor: *Biblioteca de apps* > filtro **Origenes desconocidos** > **Proyect
 | <kbd>B</kbd> &nbsp;mando derecho | Abrir o cerrar la ayuda |
 
 Las brochas que flotan junto a paredes y pisos cambian el acabado de ese cuarto.
-
-<br>
-
-<div align="center">
-  <sub>Equipo del curso de Realidad Virtual · TEC</sub>
-</div>
